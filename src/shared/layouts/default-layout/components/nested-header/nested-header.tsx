@@ -1,9 +1,15 @@
-import { Icon, Text, useTheme } from '@ui-kitten/components';
-import React, { ReactNode } from 'react';
-import { StyleProp, TouchableOpacity, View, ViewProps, ViewStyle } from 'react-native';
-import { useAutoHitSlop } from 'src/shared/hooks/view/useAutoHitSlop';
+import {Icon, Text, useTheme} from '@ui-kitten/components';
+import React, {ReactNode} from 'react';
+import {
+  StyleProp,
+  TouchableOpacity,
+  View,
+  ViewProps,
+  ViewStyle,
+} from 'react-native';
+import {useAutoHitSlop} from 'src/shared/hooks/view/useAutoHitSlop';
 
-import { styles } from './nested-header.styles';
+import {styles} from './nested-header.styles';
 
 type Props = {
   title?: string | null;
@@ -29,10 +35,12 @@ export function NestedHeader({
   withHorizontalPadding,
   ...props
 }: Props) {
-  const { insets, onLayout } = useAutoHitSlop();
+  const {insets, onLayout} = useAutoHitSlop();
   const theme = useTheme();
 
-  const accentColor = lightAccent ? theme['color-basic-100'] : theme['color-black'];
+  const accentColor = lightAccent
+    ? theme['color-basic-100']
+    : theme['color-black'];
   const backgroundColor = buttonBackground
     ? lightAccent
       ? theme['color-basic-700']
@@ -41,16 +49,19 @@ export function NestedHeader({
   return (
     <View
       {...props}
-      style={[styles.root, props.style, withHorizontalPadding && styles.horizontalPadding, customStyles]}
-    >
+      style={[
+        styles.root,
+        props.style,
+        withHorizontalPadding && styles.horizontalPadding,
+        customStyles,
+      ]}>
       {onBackButtonPress && !customLeft && (
         // TODO: change on IconButton component
         <TouchableOpacity
           onPress={onBackButtonPress}
-          style={[styles.leftButtonTouchableOpacity, { backgroundColor }]}
+          style={[styles.leftButtonTouchableOpacity, {backgroundColor}]}
           hitSlop={insets}
-          onLayout={onLayout}
-        >
+          onLayout={onLayout}>
           <View style={styles.leftButton}>
             <Icon name="arrow-back-outline" fill={accentColor} />
           </View>
@@ -62,7 +73,7 @@ export function NestedHeader({
       {customTitle
         ? customTitle
         : title && (
-            <Text category="s2" style={[styles.title, { color: accentColor }]}>
+            <Text category="s2" style={[styles.title, {color: accentColor}]}>
               {title}
             </Text>
           )}

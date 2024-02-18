@@ -7,6 +7,7 @@ import {KeyboardAware} from 'src/shared/layouts/default-layout/components/keyboa
 import {KeyboardAwareScrollView} from 'src/shared/layouts/default-layout/components/keyboard-aware-scroll-view/keyboard-aware-scroll-view';
 import {NestedHeader} from 'src/shared/layouts/default-layout/components/nested-header/nested-header';
 import themedStyles from 'src/shared/layouts/default-layout/default-layout.styles';
+import {DEFAULT_LAYOUT_PADDINGS} from 'src/shared/constants/size';
 
 type Props = {
   children: React.ReactNode;
@@ -46,8 +47,12 @@ export const DefaultLayout: FC<Props> & {
         style={[
           styles.root,
           {
-            paddingTop: paddingTop ? (insets.top || 0) + 32 : undefined,
-            paddingBottom: paddingBottom ? insets.bottom || 20 : undefined,
+            paddingTop: paddingTop
+              ? (insets.top || 0) + DEFAULT_LAYOUT_PADDINGS.paddingTop
+              : undefined,
+            paddingBottom: paddingBottom
+              ? insets.bottom || DEFAULT_LAYOUT_PADDINGS.paddingBottom
+              : undefined,
           },
           withHorizontalPadding && styles.withHorizontalPadding,
           customStyles,
