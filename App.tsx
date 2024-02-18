@@ -5,13 +5,18 @@ import {persistor, store} from 'src/store';
 
 import {MainNavigator} from 'src/processes/main-navigator/ui/main-navigator';
 import {UIProvider} from 'src/app/providers/ui-provider/ui-provider';
+import {ToastProvider} from 'src/app/providers/toast-provider/toast-provider';
+import 'react-native-get-random-values';
 
 function App(): React.JSX.Element {
+  // persistor.purge();
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <UIProvider>
-          <MainNavigator />
+          <ToastProvider>
+            <MainNavigator />
+          </ToastProvider>
         </UIProvider>
       </PersistGate>
     </Provider>

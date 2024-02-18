@@ -1,24 +1,67 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
-
-export type FinanceStateType = {
-  spending: number;
-  income: number;
-};
+import {
+  DeleteEntryPayload,
+  EditEntryPayload,
+  EntryPayload,
+  FinanceEntryType,
+  FinanceStateType,
+} from './types';
+import {v4 as uuidv4} from 'uuid';
+import {INCOME_CATEGORY} from 'src/shared/constants/categories';
 
 const initialState: FinanceStateType = {
-  spending: 0,
-  income: 0,
+  entry: {},
 };
 
 const financeSlice = createSlice({
-  name: 'basket',
+  name: 'finance',
   initialState,
   reducers: {
-    addSpending: (state, {payload}: PayloadAction<number>) => {
-      state.spending += payload;
+    addEntry: (state, {payload}: PayloadAction<EntryPayload>) => {
+      const {yearAndMonth, yearAndMonthAndDay, category, amount, entryType} =
+        payload;
+      const id = uuidv4();
+      const currentEntity = state.entry[yearAndMonth] || {};
+
+      let currentCategory =
+        entryType === FinanceEntryType.INCOME
+          ? {
+              ...category,
+              ...INCOME_CATEGORY,
+            }
+          : category;
+
+      state.entry = {
+        ...state.entry,
+        [yearAndMonth]: {
+          ...currentEntity,
+          [yearAndMonthAndDay]: {
+            ...currentEntity[yearAndMonthAndDay],
+            [id]: {
+              amount,
+              category: currentCategory,
+              entryType,
+            },
+          },
+        },
+      };
     },
-    addIncome: (state, {payload}: PayloadAction<number>) => {
-      state.income += payload;
+    deleteSpending: (state, {payload}: PayloadAction<DeleteEntryPayload>) => {
+      const {transactionId, yearAndMonth, yearAndMonthAndDay} = payload;
+      delete state.entry?.[yearAndMonth]?.[yearAndMonthAndDay]?.[transactionId];
+      if (
+        Object.keys(state.entry?.[yearAndMonth]?.[yearAndMonthAndDay] || {})
+          .length === 0
+      ) {
+        delete state.entry?.[yearAndMonth]?.[yearAndMonthAndDay];
+      }
+    },
+    editSpending: (state, {payload}: PayloadAction<EditEntryPayload>) => {
+      const {transactionId, yearAndMonth, yearAndMonthAndDay, newAmount} =
+        payload;
+
+      state.entry[yearAndMonth][yearAndMonthAndDay][transactionId].amount =
+        newAmount;
     },
   },
 });
